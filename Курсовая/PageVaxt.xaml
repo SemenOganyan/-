@@ -1,0 +1,163 @@
+﻿<Page x:Class="Курсовая.PageVaxt"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Курсовая"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800">
+    
+    <Page.Background>
+        <ImageBrush ImageSource="фон.jpeg"/>
+    </Page.Background>
+    
+    <Page.Resources>
+        <Style x:Name="YellowButton" TargetType="Button">
+            <Setter Property="TextElement.FontFamily" Value="Fonts/#Segoe UI"/>
+            <Setter Property="Foreground" Value="AliceBlue"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background" Value="#42454D"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                                 Value="True">
+
+                    <Setter Property="Background"
+                                    Value="#9399A6"/>
+
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Name="LabelNav" TargetType="TextBox">
+            <Setter Property="Foreground" Value="AliceBlue"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Margin" Value="0 15"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Width" Value="400"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="AliceBlue"/>
+            <Setter Property="Margin" Value="0 6.7"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <TextBlock IsHitTestVisible="False" FontSize="16" Text="Вход" Panel.ZIndex="2"
+                       Margin="50 18 14 0" VerticalAlignment="Top" Width="100"
+                       x:Name="Назв" HorizontalAlignment="Left">
+
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=comboBOX}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <TextBlock IsHitTestVisible="False" FontSize="16" Text="Транспорт" Panel.ZIndex="2"
+                       Margin="170 18 14 0" VerticalAlignment="Top" Width="100"
+                       x:Name="Назв1" HorizontalAlignment="Left">
+
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=comboBOX1}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <TextBlock IsHitTestVisible="False" FontSize="16" Text="Вещи" Panel.ZIndex="2"
+                       Margin="290 18 14 0" VerticalAlignment="Top" Width="100"
+                       x:Name="Назв2" HorizontalAlignment="Left">
+
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=comboBOX2}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <ComboBox Width="120" Height="30" Margin="40 14 14 14" x:Name="comboBOX"
+                  HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1"
+                  FontSize="16">
+            
+            <ListBoxItem Content="Вход"/>
+            <ListBoxItem Content="Выход"/>
+        </ComboBox>
+        <ComboBox Width="120" Height="30" Margin="160 14 14 14" x:Name="comboBOX1"
+                  HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1"
+                  FontSize="16">
+            
+            <ListBoxItem Content="Да"/>
+            <ListBoxItem Content="Нет"/>
+        </ComboBox>
+        <ComboBox Width="120" Height="30" Margin="280 14 14 14" x:Name="comboBOX2"
+                  HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1"
+                  FontSize="16">
+
+            <ListBoxItem Content="Оставлял"/>
+            <ListBoxItem Content="Не Остовлял"/>
+        </ComboBox>
+
+        <Button Width="30" Height="30" VerticalAlignment="Top"
+                HorizontalAlignment="Center" Margin="50 14 10 0" Panel.ZIndex="1"
+                Click="Button_Click" Content="+" FontSize="24"/>
+        
+        <Grid>
+            <TextBlock IsHitTestVisible="False" FontSize="20" Text="Поиск по фамилии"
+                       Foreground="AliceBlue" Panel.ZIndex="1"
+                       Margin="474 14 14 0" VerticalAlignment="Top"
+                       FontWeight="Bold" x:Name="Поиск">
+
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=Poisc}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBox x:Name="Poisc" Background="#171819" Margin="14 14 40 14"
+                     TextChanged="Poisc_TextChanged" HorizontalAlignment="Right"
+                     Width="300" CaretBrush="Silver"/>
+
+            <DataGrid x:Name="DGrid" Background="Transparent"
+                  AutoGenerateColumns="False" Margin="40 60 40 40">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Код" Binding="{Binding id}"/>
+                    <DataGridTextColumn Header="Фамилия посетителя" Binding="{Binding Посетитель.Фамилия}"/>
+                    <DataGridTextColumn Header="Время прохода" Binding="{Binding Время_прохода}"/>
+                    <DataGridTextColumn Header="Название КПП" Binding="{Binding КПП.Название}"/>
+                    <DataGridTextColumn Header="Вход/Выход" Binding="{Binding Вход_Выход}"/>
+                    <DataGridTextColumn Header="Транспорт" Binding="{Binding Транспорт}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Page>

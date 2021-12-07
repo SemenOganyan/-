@@ -1,0 +1,664 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище КППModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Доступ">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Уровень_допуска" Type="nchar" MaxLength="50" />
+          <Property Name="Описание" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="КПП">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Название" Type="nchar" MaxLength="50" />
+          <Property Name="Описание" Type="nchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Пользователь">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Код_роли" Type="int" />
+          <Property Name="Логин" Type="nchar" MaxLength="20" />
+          <Property Name="Пароль" Type="nchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Посетитель">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Серия" Type="nchar" MaxLength="50" />
+          <Property Name="Фамилия" Type="nchar" MaxLength="50" />
+          <Property Name="Имя" Type="nchar" MaxLength="50" />
+          <Property Name="Отчество" Type="nchar" MaxLength="50" />
+          <Property Name="Телефон" Type="nchar" MaxLength="20" />
+          <Property Name="Код_пользователя" Type="int" />
+        </EntityType>
+        <EntityType Name="Пропуск">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Код_Посетителя" Type="int" />
+          <Property Name="Дата_создания" Type="date" />
+          <Property Name="Действителен_до" Type="date" />
+          <Property Name="Код_доступа" Type="int" />
+        </EntityType>
+        <EntityType Name="Проход">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Код_посетителя" Type="int" />
+          <Property Name="Время_прохода" Type="datetime" />
+          <Property Name="Код_КПП" Type="int" />
+          <Property Name="Вход_Выход" Type="bit" />
+          <Property Name="Транспорт" Type="bit" />
+        </EntityType>
+        <EntityType Name="Роль">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Название" Type="nchar" MaxLength="50" />
+          <Property Name="Описание" Type="nchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Транспорт">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Номер_машины" Type="nchar" MaxLength="10" />
+          <Property Name="Марка" Type="nchar" MaxLength="20" />
+          <Property Name="Код_посетителя" Type="int" />
+        </EntityType>
+        <EntityType Name="Ячейка_хранения">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Код_КПП" Type="int" />
+          <Property Name="Код_посетителя" Type="int" />
+          <Property Name="Время_оставления" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_Пользователь_Роль">
+          <End Role="Роль" Type="Self.Роль" Multiplicity="0..1" />
+          <End Role="Пользователь" Type="Self.Пользователь" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Роль">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Пользователь">
+              <PropertyRef Name="Код_роли" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Посетитель_Пользователь">
+          <End Role="Пользователь" Type="Self.Пользователь" Multiplicity="0..1" />
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователь">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Посетитель">
+              <PropertyRef Name="Код_пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Пропуск_Доступ">
+          <End Role="Доступ" Type="Self.Доступ" Multiplicity="0..1" />
+          <End Role="Пропуск" Type="Self.Пропуск" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Доступ">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Пропуск">
+              <PropertyRef Name="Код_доступа" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Пропуск_Посетитель">
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="0..1" />
+          <End Role="Пропуск" Type="Self.Пропуск" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Посетитель">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Пропуск">
+              <PropertyRef Name="Код_Посетителя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Проход_КПП">
+          <End Role="КПП" Type="Self.КПП" Multiplicity="0..1" />
+          <End Role="Проход" Type="Self.Проход" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="КПП">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Проход">
+              <PropertyRef Name="Код_КПП" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Проход_Посетитель">
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="0..1" />
+          <End Role="Проход" Type="Self.Проход" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Посетитель">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Проход">
+              <PropertyRef Name="Код_посетителя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Транспорт_Посетитель">
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="0..1" />
+          <End Role="Транспорт" Type="Self.Транспорт" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Посетитель">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Транспорт">
+              <PropertyRef Name="Код_посетителя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ячейка_хранения_КПП">
+          <End Role="КПП" Type="Self.КПП" Multiplicity="0..1" />
+          <End Role="Ячейка_хранения" Type="Self.Ячейка_хранения" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="КПП">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Ячейка_хранения">
+              <PropertyRef Name="Код_КПП" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ячейка_хранения_Посетитель">
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="0..1" />
+          <End Role="Ячейка_хранения" Type="Self.Ячейка_хранения" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Посетитель">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Ячейка_хранения">
+              <PropertyRef Name="Код_посетителя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище КППModelContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Доступ" EntityType="Self.Доступ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="КПП" EntityType="Self.КПП" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Пользователь" EntityType="Self.Пользователь" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Посетитель" EntityType="Self.Посетитель" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Пропуск" EntityType="Self.Пропуск" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Проход" EntityType="Self.Проход" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Роль" EntityType="Self.Роль" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Транспорт" EntityType="Self.Транспорт" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ячейка_хранения" EntityType="Self.Ячейка_хранения" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Пользователь_Роль" Association="Self.FK_Пользователь_Роль">
+            <End Role="Роль" EntitySet="Роль" />
+            <End Role="Пользователь" EntitySet="Пользователь" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Посетитель_Пользователь" Association="Self.FK_Посетитель_Пользователь">
+            <End Role="Пользователь" EntitySet="Пользователь" />
+            <End Role="Посетитель" EntitySet="Посетитель" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Пропуск_Доступ" Association="Self.FK_Пропуск_Доступ">
+            <End Role="Доступ" EntitySet="Доступ" />
+            <End Role="Пропуск" EntitySet="Пропуск" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Пропуск_Посетитель" Association="Self.FK_Пропуск_Посетитель">
+            <End Role="Посетитель" EntitySet="Посетитель" />
+            <End Role="Пропуск" EntitySet="Пропуск" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Проход_КПП" Association="Self.FK_Проход_КПП">
+            <End Role="КПП" EntitySet="КПП" />
+            <End Role="Проход" EntitySet="Проход" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Проход_Посетитель" Association="Self.FK_Проход_Посетитель">
+            <End Role="Посетитель" EntitySet="Посетитель" />
+            <End Role="Проход" EntitySet="Проход" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Транспорт_Посетитель" Association="Self.FK_Транспорт_Посетитель">
+            <End Role="Посетитель" EntitySet="Посетитель" />
+            <End Role="Транспорт" EntitySet="Транспорт" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ячейка_хранения_КПП" Association="Self.FK_Ячейка_хранения_КПП">
+            <End Role="КПП" EntitySet="КПП" />
+            <End Role="Ячейка_хранения" EntitySet="Ячейка_хранения" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ячейка_хранения_Посетитель" Association="Self.FK_Ячейка_хранения_Посетитель">
+            <End Role="Посетитель" EntitySet="Посетитель" />
+            <End Role="Ячейка_хранения" EntitySet="Ячейка_хранения" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="КППModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Доступ">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Уровень_допуска" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Описание" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Пропуск" Relationship="Self.FK_Пропуск_Доступ" FromRole="Доступ" ToRole="Пропуск" />
+        </EntityType>
+        <EntityType Name="КПП">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Описание" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Проход" Relationship="Self.FK_Проход_КПП" FromRole="КПП" ToRole="Проход" />
+          <NavigationProperty Name="Ячейка_хранения" Relationship="Self.FK_Ячейка_хранения_КПП" FromRole="КПП" ToRole="Ячейка_хранения" />
+        </EntityType>
+        <EntityType Name="Пользователь">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Код_роли" Type="Int32" />
+          <Property Name="Логин" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Пароль" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Роль" Relationship="Self.FK_Пользователь_Роль" FromRole="Пользователь" ToRole="Роль" />
+          <NavigationProperty Name="Посетитель" Relationship="Self.FK_Посетитель_Пользователь" FromRole="Пользователь" ToRole="Посетитель" />
+        </EntityType>
+        <EntityType Name="Посетитель">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Серия" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Фамилия" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Имя" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Отчество" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Телефон" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Код_пользователя" Type="Int32" />
+          <NavigationProperty Name="Пользователь" Relationship="Self.FK_Посетитель_Пользователь" FromRole="Посетитель" ToRole="Пользователь" />
+          <NavigationProperty Name="Пропуск" Relationship="Self.FK_Пропуск_Посетитель" FromRole="Посетитель" ToRole="Пропуск" />
+          <NavigationProperty Name="Проход" Relationship="Self.FK_Проход_Посетитель" FromRole="Посетитель" ToRole="Проход" />
+          <NavigationProperty Name="Транспорт" Relationship="Self.FK_Транспорт_Посетитель" FromRole="Посетитель" ToRole="Транспорт" />
+          <NavigationProperty Name="Ячейка_хранения" Relationship="Self.FK_Ячейка_хранения_Посетитель" FromRole="Посетитель" ToRole="Ячейка_хранения" />
+        </EntityType>
+        <EntityType Name="Пропуск">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Код_Посетителя" Type="Int32" />
+          <Property Name="Дата_создания" Type="DateTime" Precision="0" />
+          <Property Name="Действителен_до" Type="DateTime" Precision="0" />
+          <Property Name="Код_доступа" Type="Int32" />
+          <NavigationProperty Name="Доступ" Relationship="Self.FK_Пропуск_Доступ" FromRole="Пропуск" ToRole="Доступ" />
+          <NavigationProperty Name="Посетитель" Relationship="Self.FK_Пропуск_Посетитель" FromRole="Пропуск" ToRole="Посетитель" />
+        </EntityType>
+        <EntityType Name="Проход">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Код_посетителя" Type="Int32" />
+          <Property Name="Время_прохода" Type="DateTime" Precision="3" />
+          <Property Name="Код_КПП" Type="Int32" />
+          <Property Name="Вход_Выход" Type="Boolean" />
+          <Property Name="Транспорт" Type="Boolean" />
+          <NavigationProperty Name="КПП" Relationship="Self.FK_Проход_КПП" FromRole="Проход" ToRole="КПП" />
+          <NavigationProperty Name="Посетитель" Relationship="Self.FK_Проход_Посетитель" FromRole="Проход" ToRole="Посетитель" />
+        </EntityType>
+        <EntityType Name="Роль">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Название" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Описание" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Пользователь" Relationship="Self.FK_Пользователь_Роль" FromRole="Роль" ToRole="Пользователь" />
+        </EntityType>
+        <EntityType Name="Транспорт">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Номер_машины" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Марка" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Код_посетителя" Type="Int32" />
+          <NavigationProperty Name="Посетитель" Relationship="Self.FK_Транспорт_Посетитель" FromRole="Транспорт" ToRole="Посетитель" />
+        </EntityType>
+        <EntityType Name="Ячейка_хранения">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Код_КПП" Type="Int32" />
+          <Property Name="Код_посетителя" Type="Int32" />
+          <Property Name="Время_оставления" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="КПП" Relationship="Self.FK_Ячейка_хранения_КПП" FromRole="Ячейка_хранения" ToRole="КПП" />
+          <NavigationProperty Name="Посетитель" Relationship="Self.FK_Ячейка_хранения_Посетитель" FromRole="Ячейка_хранения" ToRole="Посетитель" />
+        </EntityType>
+        <Association Name="FK_Пропуск_Доступ">
+          <End Role="Доступ" Type="Self.Доступ" Multiplicity="0..1" />
+          <End Role="Пропуск" Type="Self.Пропуск" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Доступ">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Пропуск">
+              <PropertyRef Name="Код_доступа" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Проход_КПП">
+          <End Role="КПП" Type="Self.КПП" Multiplicity="0..1" />
+          <End Role="Проход" Type="Self.Проход" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="КПП">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Проход">
+              <PropertyRef Name="Код_КПП" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ячейка_хранения_КПП">
+          <End Role="КПП" Type="Self.КПП" Multiplicity="0..1" />
+          <End Role="Ячейка_хранения" Type="Self.Ячейка_хранения" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="КПП">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Ячейка_хранения">
+              <PropertyRef Name="Код_КПП" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Пользователь_Роль">
+          <End Role="Роль" Type="Self.Роль" Multiplicity="0..1" />
+          <End Role="Пользователь" Type="Self.Пользователь" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Роль">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Пользователь">
+              <PropertyRef Name="Код_роли" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Посетитель_Пользователь">
+          <End Role="Пользователь" Type="Self.Пользователь" Multiplicity="0..1" />
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Пользователь">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Посетитель">
+              <PropertyRef Name="Код_пользователя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Пропуск_Посетитель">
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="0..1" />
+          <End Role="Пропуск" Type="Self.Пропуск" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Посетитель">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Пропуск">
+              <PropertyRef Name="Код_Посетителя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Проход_Посетитель">
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="0..1" />
+          <End Role="Проход" Type="Self.Проход" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Посетитель">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Проход">
+              <PropertyRef Name="Код_посетителя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Транспорт_Посетитель">
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="0..1" />
+          <End Role="Транспорт" Type="Self.Транспорт" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Посетитель">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Транспорт">
+              <PropertyRef Name="Код_посетителя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ячейка_хранения_Посетитель">
+          <End Role="Посетитель" Type="Self.Посетитель" Multiplicity="0..1" />
+          <End Role="Ячейка_хранения" Type="Self.Ячейка_хранения" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Посетитель">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Ячейка_хранения">
+              <PropertyRef Name="Код_посетителя" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="КППEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Доступ" EntityType="Self.Доступ" />
+          <EntitySet Name="КПП" EntityType="Self.КПП" />
+          <EntitySet Name="Пользователь" EntityType="Self.Пользователь" />
+          <EntitySet Name="Посетитель" EntityType="Self.Посетитель" />
+          <EntitySet Name="Пропуск" EntityType="Self.Пропуск" />
+          <EntitySet Name="Проход" EntityType="Self.Проход" />
+          <EntitySet Name="Роль" EntityType="Self.Роль" />
+          <EntitySet Name="Транспорт" EntityType="Self.Транспорт" />
+          <EntitySet Name="Ячейка_хранения" EntityType="Self.Ячейка_хранения" />
+          <AssociationSet Name="FK_Пропуск_Доступ" Association="Self.FK_Пропуск_Доступ">
+            <End Role="Доступ" EntitySet="Доступ" />
+            <End Role="Пропуск" EntitySet="Пропуск" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Проход_КПП" Association="Self.FK_Проход_КПП">
+            <End Role="КПП" EntitySet="КПП" />
+            <End Role="Проход" EntitySet="Проход" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ячейка_хранения_КПП" Association="Self.FK_Ячейка_хранения_КПП">
+            <End Role="КПП" EntitySet="КПП" />
+            <End Role="Ячейка_хранения" EntitySet="Ячейка_хранения" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Пользователь_Роль" Association="Self.FK_Пользователь_Роль">
+            <End Role="Роль" EntitySet="Роль" />
+            <End Role="Пользователь" EntitySet="Пользователь" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Посетитель_Пользователь" Association="Self.FK_Посетитель_Пользователь">
+            <End Role="Пользователь" EntitySet="Пользователь" />
+            <End Role="Посетитель" EntitySet="Посетитель" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Пропуск_Посетитель" Association="Self.FK_Пропуск_Посетитель">
+            <End Role="Посетитель" EntitySet="Посетитель" />
+            <End Role="Пропуск" EntitySet="Пропуск" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Проход_Посетитель" Association="Self.FK_Проход_Посетитель">
+            <End Role="Посетитель" EntitySet="Посетитель" />
+            <End Role="Проход" EntitySet="Проход" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Транспорт_Посетитель" Association="Self.FK_Транспорт_Посетитель">
+            <End Role="Посетитель" EntitySet="Посетитель" />
+            <End Role="Транспорт" EntitySet="Транспорт" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ячейка_хранения_Посетитель" Association="Self.FK_Ячейка_хранения_Посетитель">
+            <End Role="Посетитель" EntitySet="Посетитель" />
+            <End Role="Ячейка_хранения" EntitySet="Ячейка_хранения" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище КППModelContainer" CdmEntityContainer="КППEntities">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="КППModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Доступ">
+            <EntityTypeMapping TypeName="КППModel.Доступ">
+              <MappingFragment StoreEntitySet="Доступ">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Уровень_допуска" ColumnName="Уровень_допуска" />
+                <ScalarProperty Name="Описание" ColumnName="Описание" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="КПП">
+            <EntityTypeMapping TypeName="КППModel.КПП">
+              <MappingFragment StoreEntitySet="КПП">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+                <ScalarProperty Name="Описание" ColumnName="Описание" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Пользователь">
+            <EntityTypeMapping TypeName="КППModel.Пользователь">
+              <MappingFragment StoreEntitySet="Пользователь">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Код_роли" ColumnName="Код_роли" />
+                <ScalarProperty Name="Логин" ColumnName="Логин" />
+                <ScalarProperty Name="Пароль" ColumnName="Пароль" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Посетитель">
+            <EntityTypeMapping TypeName="КППModel.Посетитель">
+              <MappingFragment StoreEntitySet="Посетитель">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Серия" ColumnName="Серия" />
+                <ScalarProperty Name="Фамилия" ColumnName="Фамилия" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Отчество" ColumnName="Отчество" />
+                <ScalarProperty Name="Телефон" ColumnName="Телефон" />
+                <ScalarProperty Name="Код_пользователя" ColumnName="Код_пользователя" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Пропуск">
+            <EntityTypeMapping TypeName="КППModel.Пропуск">
+              <MappingFragment StoreEntitySet="Пропуск">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Код_Посетителя" ColumnName="Код_Посетителя" />
+                <ScalarProperty Name="Дата_создания" ColumnName="Дата_создания" />
+                <ScalarProperty Name="Действителен_до" ColumnName="Действителен_до" />
+                <ScalarProperty Name="Код_доступа" ColumnName="Код_доступа" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Проход">
+            <EntityTypeMapping TypeName="КППModel.Проход">
+              <MappingFragment StoreEntitySet="Проход">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Код_посетителя" ColumnName="Код_посетителя" />
+                <ScalarProperty Name="Время_прохода" ColumnName="Время_прохода" />
+                <ScalarProperty Name="Код_КПП" ColumnName="Код_КПП" />
+                <ScalarProperty Name="Вход_Выход" ColumnName="Вход_Выход" />
+                <ScalarProperty Name="Транспорт" ColumnName="Транспорт" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Роль">
+            <EntityTypeMapping TypeName="КППModel.Роль">
+              <MappingFragment StoreEntitySet="Роль">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Название" ColumnName="Название" />
+                <ScalarProperty Name="Описание" ColumnName="Описание" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Транспорт">
+            <EntityTypeMapping TypeName="КППModel.Транспорт">
+              <MappingFragment StoreEntitySet="Транспорт">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Номер_машины" ColumnName="Номер_машины" />
+                <ScalarProperty Name="Марка" ColumnName="Марка" />
+                <ScalarProperty Name="Код_посетителя" ColumnName="Код_посетителя" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ячейка_хранения">
+            <EntityTypeMapping TypeName="КППModel.Ячейка_хранения">
+              <MappingFragment StoreEntitySet="Ячейка_хранения">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Код_КПП" ColumnName="Код_КПП" />
+                <ScalarProperty Name="Код_посетителя" ColumnName="Код_посетителя" />
+                <ScalarProperty Name="Время_оставления" ColumnName="Время_оставления" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
